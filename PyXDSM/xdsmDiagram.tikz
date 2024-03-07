@@ -1,0 +1,69 @@
+
+%%% Preamble Requirements %%%
+% \usepackage{geometry}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{tikz}
+
+% Optional packages such as sfmath set through python interface
+% \usepackage{sfmath}
+
+% \usetikzlibrary{arrows,chains,positioning,scopes,shapes.geometric,shapes.misc,shadows}
+
+%%% End Preamble Requirements %%%
+
+\input{"C:/Users/wyatt/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0/LocalCache/local-packages/Python310/site-packages/pyxdsm/diagram_styles"}
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+&
+\node [DataIO] (output_openvsp) {$\begin{array}{c}\text{geometry}\end{array}$};&
+\node [DataIO] (output_vspaero) {$\begin{array}{c}\text{velocity} \\ \text{altitude}\end{array}$};&
+&
+\\
+%Row 1
+&
+\node [Function] (openvsp) {$\text{OpenVSP}$};&
+\node [DataInter] (openvsp-vspaero) {$\begin{array}{c}\text{mesh file}\end{array}$};&
+\node [DataInter] (openvsp-radar) {$\begin{array}{c}\text{mesh file}\end{array}$};&
+\\
+%Row 2
+\node [DataIO] (left_output_vspaero) {$\begin{array}{c}\text{lift} \\ \text{drag}\end{array}$};&
+&
+\node [Function] (vspaero) {$\text{VSPAero}$};&
+&
+\\
+%Row 3
+\node [DataIO] (left_output_radar) {$\begin{array}{c}\text{radar cross section}\end{array}$};&
+&
+&
+\node [Function] (radar) {$\text{RadarSimPy}$};&
+\\
+%Row 4
+&
+&
+&
+&
+\\
+};
+
+% XDSM process chains
+
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(openvsp) edge [DataLine] (openvsp-vspaero)
+(openvsp) edge [DataLine] (openvsp-radar)
+(vspaero) edge [DataLine] (left_output_vspaero)
+(radar) edge [DataLine] (left_output_radar)
+% Vertical edges
+(openvsp-vspaero) edge [DataLine] (vspaero)
+(openvsp-radar) edge [DataLine] (radar)
+(openvsp) edge [DataLine] (output_openvsp)
+(vspaero) edge [DataLine] (output_vspaero);
+\end{pgfonlayer}
+
+\end{tikzpicture}
