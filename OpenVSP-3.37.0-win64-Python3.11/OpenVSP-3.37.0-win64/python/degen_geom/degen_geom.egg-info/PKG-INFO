@@ -4,5 +4,3 @@ Version: 0.0.1
 Summary: Defines common data structures for degenerate geometry types
 Author: Uber Technologies, Inc.
 License: MIT
-Requires-Dist: utilities
-Requires-Dist: numpy

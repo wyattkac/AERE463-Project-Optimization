@@ -6,8 +6,3 @@ Home-page:
 Author: 
 Author-email: 
 License: MIT
-Requires-Dist: airfoils
-Requires-Dist: numpy
-Requires-Dist: scipy
-Requires-Dist: utilities
-Requires-Dist: fortranformat

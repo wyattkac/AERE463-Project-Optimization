@@ -5,6 +5,3 @@ Summary: OpenVSP Python Wrapper
 Author: Uber Technologies
 Author-email: 
 License: MIT
-Requires-Dist: degen_geom
-Requires-Dist: utilities
-Requires-Dist: openvsp_config

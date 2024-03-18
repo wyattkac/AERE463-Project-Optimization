@@ -6,8 +6,3 @@ Home-page:
 Author: Rob McDonald
 Author-email: rob.a.mcdonald@gmail.com
 License: MIT
-Requires-Dist: numpy
-Requires-Dist: matplotlib
-Requires-Dist: dataclasses
-Requires-Dist: pydantic
-Requires-Dist: f90nml
