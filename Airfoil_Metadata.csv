@@ -1,0 +1,86 @@
+# AIRFOIL METADATA CSV FILE
+
+Airfoil File Directory, C:\Users\Nicholas\Documents\ISU Spring 2024\AERE 463\AERE463-Project-Optimization
+
+########################################
+Airfoil File Name, WingGeom_CJQZAGGHGG_0.dat
+Geom Name, WingGeom
+Geom ID, CJQZAGGHGG
+Airfoil Index, 0
+XSec Flag, 1
+XSec Index, 0
+XSecSurf ID, FXIVSUZOIR
+FoilSurf u Value, 0.000000
+Global u Value, 0.333333
+Leading Edge Point, 0.000000, 0.000000, 0.000000
+Trailing Edge Point, 4.000000, 0.000000, 0.000000
+Chord, 4.000000
+########################################
+
+########################################
+Airfoil File Name, WingGeom_CJQZAGGHGG_1.dat
+Geom Name, WingGeom
+Geom ID, CJQZAGGHGG
+Airfoil Index, 1
+XSec Flag, 0
+FoilSurf u Value, 0.200000
+Global u Value, 0.400000
+Leading Edge Point, 1.039230, 1.800000, 0.000000
+Trailing Edge Point, 4.439230, 1.800000, 0.000000
+Chord, 3.400000
+########################################
+
+########################################
+Airfoil File Name, WingGeom_CJQZAGGHGG_2.dat
+Geom Name, WingGeom
+Geom ID, CJQZAGGHGG
+Airfoil Index, 2
+XSec Flag, 0
+FoilSurf u Value, 0.400000
+Global u Value, 0.466667
+Leading Edge Point, 2.078461, 3.600000, 0.000000
+Trailing Edge Point, 4.878461, 3.600000, 0.000000
+Chord, 2.800000
+########################################
+
+########################################
+Airfoil File Name, WingGeom_CJQZAGGHGG_3.dat
+Geom Name, WingGeom
+Geom ID, CJQZAGGHGG
+Airfoil Index, 3
+XSec Flag, 0
+FoilSurf u Value, 0.600000
+Global u Value, 0.533333
+Leading Edge Point, 3.117691, 5.400000, 0.000000
+Trailing Edge Point, 5.317691, 5.400000, 0.000000
+Chord, 2.200000
+########################################
+
+########################################
+Airfoil File Name, WingGeom_CJQZAGGHGG_4.dat
+Geom Name, WingGeom
+Geom ID, CJQZAGGHGG
+Airfoil Index, 4
+XSec Flag, 0
+FoilSurf u Value, 0.800000
+Global u Value, 0.600000
+Leading Edge Point, 4.156922, 7.200000, 0.000000
+Trailing Edge Point, 5.756922, 7.200000, 0.000000
+Chord, 1.600000
+########################################
+
+########################################
+Airfoil File Name, WingGeom_CJQZAGGHGG_5.dat
+Geom Name, WingGeom
+Geom ID, CJQZAGGHGG
+Airfoil Index, 5
+XSec Flag, 1
+XSec Index, 1
+XSecSurf ID, FXIVSUZOIR
+FoilSurf u Value, 1.000000
+Global u Value, 0.666667
+Leading Edge Point, 5.196152, 9.000000, 0.000000
+Trailing Edge Point, 6.196152, 9.000000, 0.000000
+Chord, 1.000000
+########################################
+
