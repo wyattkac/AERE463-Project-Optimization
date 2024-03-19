@@ -1,9 +1,9 @@
 Results_Name,VSPAERO_Geom
-Results_Timestamp,1710806100
-Results_Date,3,18,2024
-Results_Time,18,55,0
+Results_Timestamp,1710866127
+Results_Date,3,19,2024
+Results_Time,11,35,27
 AnalysisMethod,0
-Analysis_Duration_Sec,1.630000000000000060e-01
+Analysis_Duration_Sec,1.590000000000000024e-01
 CompGeomFileName,
 DegenGeomFileName,Unnamed_DegenGeom.csv
 GeometrySet,0
