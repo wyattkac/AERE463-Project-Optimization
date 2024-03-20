@@ -3,13 +3,13 @@
 Airfoil File Directory, C:\Users\Nicholas\Documents\ISU Spring 2024\AERE 463\AERE463-Project-Optimization
 
 ########################################
-Airfoil File Name, WingGeom_UFXHTULQLZ_0.dat
+Airfoil File Name, WingGeom_DASODZKOYL_0.dat
 Geom Name, WingGeom
-Geom ID, UFXHTULQLZ
+Geom ID, DASODZKOYL
 Airfoil Index, 0
 XSec Flag, 1
 XSec Index, 0
-XSecSurf ID, SNOIZPJFCS
+XSecSurf ID, BJIOKUUBSD
 FoilSurf u Value, 0.000000
 Global u Value, 0.333333
 Leading Edge Point, 0.000000, 0.000000, 0.000000
@@ -18,9 +18,9 @@ Chord, 4.000000
 ########################################
 
 ########################################
-Airfoil File Name, WingGeom_UFXHTULQLZ_1.dat
+Airfoil File Name, WingGeom_DASODZKOYL_1.dat
 Geom Name, WingGeom
-Geom ID, UFXHTULQLZ
+Geom ID, DASODZKOYL
 Airfoil Index, 1
 XSec Flag, 0
 FoilSurf u Value, 0.200000
@@ -31,9 +31,9 @@ Chord, 3.400000
 ########################################
 
 ########################################
-Airfoil File Name, WingGeom_UFXHTULQLZ_2.dat
+Airfoil File Name, WingGeom_DASODZKOYL_2.dat
 Geom Name, WingGeom
-Geom ID, UFXHTULQLZ
+Geom ID, DASODZKOYL
 Airfoil Index, 2
 XSec Flag, 0
 FoilSurf u Value, 0.400000
@@ -44,9 +44,9 @@ Chord, 2.800000
 ########################################
 
 ########################################
-Airfoil File Name, WingGeom_UFXHTULQLZ_3.dat
+Airfoil File Name, WingGeom_DASODZKOYL_3.dat
 Geom Name, WingGeom
-Geom ID, UFXHTULQLZ
+Geom ID, DASODZKOYL
 Airfoil Index, 3
 XSec Flag, 0
 FoilSurf u Value, 0.600000
@@ -57,9 +57,9 @@ Chord, 2.200000
 ########################################
 
 ########################################
-Airfoil File Name, WingGeom_UFXHTULQLZ_4.dat
+Airfoil File Name, WingGeom_DASODZKOYL_4.dat
 Geom Name, WingGeom
-Geom ID, UFXHTULQLZ
+Geom ID, DASODZKOYL
 Airfoil Index, 4
 XSec Flag, 0
 FoilSurf u Value, 0.800000
@@ -70,13 +70,13 @@ Chord, 1.600000
 ########################################
 
 ########################################
-Airfoil File Name, WingGeom_UFXHTULQLZ_5.dat
+Airfoil File Name, WingGeom_DASODZKOYL_5.dat
 Geom Name, WingGeom
-Geom ID, UFXHTULQLZ
+Geom ID, DASODZKOYL
 Airfoil Index, 5
 XSec Flag, 1
 XSec Index, 1
-XSecSurf ID, SNOIZPJFCS
+XSecSurf ID, BJIOKUUBSD
 FoilSurf u Value, 1.000000
 Global u Value, 0.666667
 Leading Edge Point, 5.196152, 9.000000, 0.000000
