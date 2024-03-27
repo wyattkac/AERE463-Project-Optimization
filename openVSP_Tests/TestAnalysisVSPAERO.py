@@ -34,7 +34,7 @@ def TestVSPAeroComputeGeomPanel():
 
     #//open the file created in GenerateGeom
     fname_vspaerotests = "TestVSPAero.vsp3"
-    vsp.ReadVSPFile(fname_vspaerotests);  #// Sets VSP3 file name
+    vsp.ReadVSPFile(fname_vspaerotests)  #// Sets VSP3 file name
 
     #//==== Analysis: VSPAero Compute Geometry ====//
     analysis_name = "VSPAEROComputeGeometry"
