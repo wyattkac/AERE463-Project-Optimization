@@ -52,7 +52,7 @@ freq = 3.1e9
 pol = [0, 0, 1]
 density = .1
 
-rcs = np.zeros_like(phi)
+rcs = np.zeros_like(phi, dtype=float)
 
 tic = time.time()
 for phi_idx, phi_ang in enumerate(phi):
@@ -72,11 +72,13 @@ phi = np.concatenate((phi, -phi))
 
 average_rcs = np.mean(rcs)
 print(average_rcs)
-np.savetxt('average_rcs.txt', [average_rcs], fmt='%.18f')
+with open('average_rcs.txt', 'a') as file:
+    file.write(f"{average_rcs:.18f}\n")
 
 max_rcs = np.max(rcs)
 print(max_rcs)
-np.savetxt('max_rcs.txt', [max_rcs], fmt='%.18f')
+with open('max_rcs.txt', 'a') as file:
+    file.write(f"{max_rcs:.18f}\n")
 
 
 
