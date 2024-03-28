@@ -69,9 +69,14 @@ print('Exec time :'+str(toc-tic) + 's')
 
 rcs = np.concatenate((rcs, rcs))
 phi = np.concatenate((phi, -phi))
+
 average_rcs = np.mean(rcs)
 print(average_rcs)
 np.savetxt('average_rcs.txt', [average_rcs], fmt='%.18f')
+
+max_rcs = np.max(rcs)
+print(max_rcs)
+np.savetxt('max_rcs.txt', [max_rcs], fmt='%.18f')
 
 
 
