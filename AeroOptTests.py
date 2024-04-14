@@ -8,24 +8,20 @@ import openvsp as vsp
 print("\tSetting vehicle parameters.")
 pod_id = vsp.AddGeom("POD", "")
 wing_id = vsp.AddGeom("WING", pod_id)
-
-vsp.SetParmVal(wing_id, "X_Rel_Location", "XForm", 2.5)
-vsp.SetParmVal(wing_id, "TotalArea", "WingGeom", 25)
-vsp.SetParmVal(wing_id, "SectTess_U", "XSec_1", 12)
-"""
-pod_id = vsp.AddGeom("POD", "")
-wing_id = vsp.AddGeom("WING", pod_id)
 vsp.SetParmVal(wing_id, "X_Rel_Location", "XForm", 2.5)
 vsp.SetParmVal( wing_id, "TotalArea", "WingGeom", 25 )
 vsp.SetParmVal(wing_id, "SectTess_U", "XSec_1", 12)
+"""
 elev_id = vsp.AddGeom("WING", pod_id)
 vsp.SetParmVal(elev_id, "X_Rel_Location", "XForm", 8)
 vsp.SetParmVal(elev_id, "TotalArea", "WingGeom", 5)
+vsp.SetParmVal(elev_id, "SectTess_U", "XSec_1", 12)
 rudd_id = vsp.AddGeom("WING", pod_id)
 vsp.SetSetFlag(rudd_id, 3, True)
 vsp.RotateSet(3, 90, 0, 0)
 vsp.SetParmVal(rudd_id, "X_Rel_Location", "XForm", 8.2)
 vsp.SetParmVal(rudd_id, "TotalArea", "WingGeom", 3)
+vsp.SetParmVal(rudd_id, "SectTess_U", "XSec_1", 12)
 """
 vsp.Update()
 
@@ -57,11 +53,12 @@ vsp.SetIntAnalysisInput(analysis_name, "GeomSet", geom_set, 0)
 ref_flag = []
 ref_flag.append(1)
 vsp.SetIntAnalysisInput(analysis_name, "RefFlag", ref_flag, 0)
-wid = vsp.FindGeomsWithName("WingGeom")
+#TODO
+wid = wing_id#vsp.FindGeomsWithName("WingGeom")
 vsp.SetStringAnalysisInput(analysis_name, "WingID", wid, 0)
 #// Freestream Parameters
 alpha = []
-alpha.append(0.0)
+alpha.append(1.0)
 vsp.SetDoubleAnalysisInput(analysis_name, "AlphaStart", alpha, 0)
 AlphaNpts = []
 vsp.SetIntAnalysisInput(analysis_name, "AlphaNpts", AlphaNpts, 0)
