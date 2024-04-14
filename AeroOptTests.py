@@ -6,23 +6,34 @@ import openvsp as vsp
 
 # Setup Vehicle ------------------------------------------------------------------------------------
 print("\tSetting vehicle parameters.")
+# Setup Pod
 pod_id = vsp.AddGeom("POD", "")
+vsp.SetParmVal(pod_id, "FineRatio", "Design", 20)
 wing_id = vsp.AddGeom("WING", pod_id)
-vsp.SetParmVal(wing_id, "X_Rel_Location", "XForm", 2.5)
-vsp.SetParmVal( wing_id, "TotalArea", "WingGeom", 25 )
-vsp.SetParmVal(wing_id, "SectTess_U", "XSec_1", 12)
-"""
+#   Param for NACA 4 Series Airfoil
+vsp.SetParmVal(wing_id, "ThickChord", "XSecCurve_0", .1) #Range of 0 to 1
+vsp.SetParmVal(wing_id, "Camber", "XSecCurve_0", .0) #Range of 0 to 0.09
+vsp.SetParmVal(wing_id, "CamberLoc", "XSecCurve_0", .2) #Range of 0.1 to 0.9
+#   Param for Wing
+vsp.SetParmVal(wing_id, "Root_Chord", "XSec_1", 1.9)
+vsp.SetParmVal(wing_id, "Tip_Chord", "XSec_1", 1.9)
+vsp.SetParmVal(wing_id, "TotalSpan", "WingGeom", 13.5)
+vsp.SetParmVal(wing_id, "Sweep", "XSec_1", 10 ) #Range of -89 to 89
+#vsp.SetParmVal(wing_id, "Twist", "XSec_0", 0) #Angle of Incidence
+vsp.SetParmVal(wing_id, "X_Rel_Location", "XForm", 2.5) #Range of 0 to 10-Chord
+#   Params for Accuracy
+vsp.SetParmVal(wing_id, "SectTess_U", "XSec_1", 12) #Number of spanwise sections
+#vsp.SetParmVal(wing_id, "Density", "Mass_Props", 1)
 elev_id = vsp.AddGeom("WING", pod_id)
 vsp.SetParmVal(elev_id, "X_Rel_Location", "XForm", 8)
 vsp.SetParmVal(elev_id, "TotalArea", "WingGeom", 5)
 vsp.SetParmVal(elev_id, "SectTess_U", "XSec_1", 12)
 rudd_id = vsp.AddGeom("WING", pod_id)
-vsp.SetSetFlag(rudd_id, 3, True)
-vsp.RotateSet(3, 90, 0, 0)
+vsp.SetParmVal(rudd_id, "Sym_Planar_Flag", "Sym", 0.0 ) #Make it not symmetic (just half an airfoil)
+vsp.SetParmVal(rudd_id, "X_Rel_Rotation", "XForm", 90) #Rotate it vertically 
 vsp.SetParmVal(rudd_id, "X_Rel_Location", "XForm", 8.2)
-vsp.SetParmVal(rudd_id, "TotalArea", "WingGeom", 3)
+vsp.SetParmVal(rudd_id, "TotalArea", "WingGeom", 1.5)
 vsp.SetParmVal(rudd_id, "SectTess_U", "XSec_1", 12)
-"""
 vsp.Update()
 
 # Setup and Run Aerodynamic Analysis ---------------------------------------------------------------
