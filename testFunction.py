@@ -7,4 +7,4 @@ target = {
     "location": (0, 0, 0),
 }
 
-RadarSimPy_Function(target)
+[average_rcs, max_rcs] = RadarSimPy_Function(target)
