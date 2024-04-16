@@ -1,3 +1,5 @@
+# Type: Function
+
 def RadarSimPy_Function(target):
     import radarsimpy
     print('`RadarSimPy` used in this example is version: ' +
@@ -54,6 +56,6 @@ def RadarSimPy_Function(target):
     with open('max_rcs.txt', 'a') as file:
         file.write(f"{max_rcs:.18f}\n")
         
-if __name__ == '__main__':
-    # call morning func
-    RadarSimPy_Function()
+# if __name__ == '__main__':
+#     # call func
+#     RadarSimPy_Function()
