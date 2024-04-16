@@ -1,6 +1,6 @@
 # Type: Function
 
-def RadarSimPy_Function(target):
+def rcs(target):
     import radarsimpy
     print('`RadarSimPy` used in this example is version: ' +
         str(radarsimpy.__version__))
