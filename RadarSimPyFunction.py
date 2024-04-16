@@ -55,7 +55,7 @@ def RadarSimPy_Function(target):
     print(max_rcs)
     with open('max_rcs.txt', 'a') as file:
         file.write(f"{max_rcs:.18f}\n")
-        
+    return average_rcs, max_rcs
 # if __name__ == '__main__':
 #     # call func
 #     RadarSimPy_Function()
