@@ -3,7 +3,7 @@
 from rcsFunc import rcs
 
 target = {
-    "model": 'C:/Users/Nicholas/Documents/ISU Spring 2024/AERE 463/AERE463-Project-Optimization/test_vehicle_mesh.stl',
+    "model": 'test_vehicle_mesh.stl',
     "location": (0, 0, 0),
 }
 
