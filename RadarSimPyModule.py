@@ -1,4 +1,9 @@
-# %%
+# %
+# @author: Nicholas McCormick
+# @date: 2024-03-28
+# @note: This script is used to simulate the radar cross section of an object and derived from an example on the RadarSimPy GitHub page.
+# %
+
 import radarsimpy
 print('`RadarSimPy` used in this example is version: ' +
       str(radarsimpy.__version__))
@@ -12,32 +17,6 @@ target = {
         "model": 'C:/Users/Nicholas/Documents/ISU Spring 2024/AERE 463/AERE463-Project-Optimization/Example_Mesh1.stl',
         "location": (0, 0, 0),
   }
-
-# %%
-# import plotly.graph_objs as go
-# from IPython.display import Image
-
-# ms = pymeshlab.MeshSet()
-# ms.load_new_mesh(target['model'])
-# t_mesh = ms.current_mesh()
-# v_matrix = np.array(t_mesh.vertex_matrix())
-# f_matrix = np.array(t_mesh.face_matrix())
-
-# fig = go.Figure()
-# fig.add_trace(go.Mesh3d(x=v_matrix[:, 0],
-#                         y=v_matrix[:, 1],
-#                         z=v_matrix[:, 2],
-#                         i=f_matrix[:, 0],
-#                         j=f_matrix[:, 1],
-#                         k=f_matrix[:, 2],
-#                         intensity=v_matrix[:, 2],
-#                         colorscale='Viridis'
-#                         ))
-# fig['layout']['scene']['aspectmode'] = "data"
-# fig['layout']['height'] = 800
-
-# # uncomment this to display interactive plot
-# fig.show()
 
 # # Simulate RCS vs Observation Angle
 # %%
@@ -103,5 +82,4 @@ fig.update_layout(
     xaxis=dict(title='Observation angle (Degree)', dtick=20),
 )
 
-# fig.write_image("figure.png", width=800, height=800, scale=2)
 fig.show()
