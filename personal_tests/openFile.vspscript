@@ -1,0 +1,6 @@
+void main(){
+    string fname = "..\\..\\..\\GitHub\\AERE463-Project-Optimization\\test_vehicle.vsp3";
+    ClearVSPModel();
+    ReadVSPFile( fname );
+    Print( string( "DONE!\n" ) );
+}
