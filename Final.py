@@ -14,8 +14,9 @@ __status__ = "Prototype"
 
 #TODO Add Structure
 #TODO Add more inputs
-#TODO Clean Up Code (remove unneeded imports, tidy code & comments)    
-
+#TODO Clean Up Code (remove unneeded imports, tidy code & comments) 
+   
+generations = 10
 class AeroRCS_opt(om.ExplicitComponent):
 
     def setup(self):
@@ -84,23 +85,23 @@ class AeroRCS_opt(om.ExplicitComponent):
         myCsvRow = [ThickChord, Camber, CamberLoc, TotalChord, TotalSpan, Twist, XLoc, outputs["SM"], outputs["Cl"], outputs["Cd/Cl"], ]
         with open(r'x(hist).csv', 'a', newline='') as csvfile:
             fieldnames = ['1','2','3','4','5','6','7','8','9','10','11','12']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writerow({'1':ThickChord, '2':Camber, '3':CamberLoc, '4':TotalChord, '5':TotalSpan, '6':Twist, '7':XLoc, '8':outputs["SM"], '9':outputs["Cl"], '10':outputs["Cd/Cl"], '11':outputs["max_RCS"], '12':outputs["Tot_Obj"]})
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames,delimiter=',')
+            writer.writerow({'1':float(ThickChord), '2':float(Camber), '3':float(CamberLoc), '4':float(TotalChord), '5':float(TotalSpan), '6':float(Twist), '7':float(XLoc), '8':float(outputs["SM"]), '9':float(outputs["Cl"]), '10':float(outputs["Cd/Cl"]), '11':float(outputs["max_RCS"]), '12':float(outputs["Tot_Obj"])})
         #os.system('start cmd /c C:\\Users\\wyatt\\OneDrive\\Documents\\GitHub\\AERE463-Project-Optimization\\openFile.bat')
         #time.sleep(1)
 
 
 if __name__ == "__main__":
     if os.path.exists("x(hist).csv"):
-        shutil.copyfile('x(hist).csv', 'xxx(hist).csv')
+        shutil.copy2('x(hist).csv', 'xxx(hist).csv')
         os.remove("x(hist).csv")
     else:
         print("No Hist File To Remove")
     
     with open(r'x(hist).csv', 'a', newline='') as csvfile:
         fieldnames = ['1','2','3','4','5','6','7','8','9','10','11','12']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writerow({'1':'ThickChord', '2':'Camber', '3':'CamberLoc', '4':'TotalChord', '5':'TotalSpan', '6':'Twist', '7':'XLoc', '8':'outputs["SM"]', '9':'outputs["Cl"]', '10':'outputs["Cd/Cl"]', '11':'outputs["max_RCS"]', '12':'outputs["Tot_Obj"]'})
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=',')
+        writer.writerow({'1':'ThickChord', '2':'Camber', '3':'CamberLoc', '4':'TotalChord', '5':'TotalSpan', '6':'Twist', '7':'XLoc', '8':'outputs["SM"]', '9':'outputs["Cl"]', '10':'outputs["Cd/Cl"]', '11':'outputs["max_RCS"]', '12':'outputs["Tot_Obj"]'},)
 
     model = om.Group()
     model.add_subsystem("uav", AeroRCS_opt())
@@ -108,7 +109,7 @@ if __name__ == "__main__":
     prob = om.Problem(model)
     
     prob.driver = om.SimpleGADriver()
-    prob.driver.options["max_gen"] = 1
+    prob.driver.options["max_gen"] = generations
     
     prob.model.add_design_var("uav.ThickChord", lower=.1, upper=1)
     prob.model.add_design_var("uav.Camber", lower=0, upper=0.9)
