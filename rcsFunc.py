@@ -32,7 +32,7 @@ def rcs(target):
 
     tic = time.time()
     for phi_idx, phi_ang in enumerate(phi):
-        rcs[phi_idx] = 10 * np.log10(
+        rcs[phi_idx] = (
             rcs_sbr([target],
                     freq,
                     phi_ang,
@@ -47,14 +47,14 @@ def rcs(target):
     phi = np.concatenate((phi, -phi))
 
     average_rcs = np.mean(rcs)
-    print(average_rcs)
-    with open('average_rcs.txt', 'a') as file:
-        file.write(f"{average_rcs:.18f}\n")
+    # print(average_rcs)
+    # with open('average_rcs.txt', 'a') as file:
+    #     file.write(f"{average_rcs:.18f}\n")
 
     max_rcs = np.max(rcs)
-    print(max_rcs)
-    with open('max_rcs.txt', 'a') as file:
-        file.write(f"{max_rcs:.18f}\n")
+    # print(max_rcs)
+    # with open('max_rcs.txt', 'a') as file:
+    #     file.write(f"{max_rcs:.18f}\n")
     return average_rcs, max_rcs
 # if __name__ == '__main__':
 #     # call func
