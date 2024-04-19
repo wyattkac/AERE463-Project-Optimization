@@ -15,8 +15,8 @@ __status__ = "Prototype"
 #TODO Add Structure
 #TODO Add more inputs
 #TODO Clean Up Code (remove unneeded imports, tidy code & comments) 
-   
-generations = 10
+
+generations = 50
 class AeroRCS_opt(om.ExplicitComponent):
 
     def setup(self):
@@ -46,7 +46,7 @@ class AeroRCS_opt(om.ExplicitComponent):
         TotalChord = inputs["TotalChord"]
         TotalSpan = inputs["TotalSpan"]
         Twist = inputs["Twist"]
-        XLoc = 2.5
+        XLoc = [2.5]
         target = {
             "model": 'test_vehicle_mesh.stl',
             "location": (0, 0, 0),
@@ -60,23 +60,25 @@ class AeroRCS_opt(om.ExplicitComponent):
             reader = csv.reader(f)
             for i in range(17):
                 row = next(reader)
-            value = row[4-1]
+            value = row[6-1]
         outputs["Cd"] = value
 
         with open("z.csv") as f:
             reader = csv.reader(f)
             for i in range(28):
                 row = next(reader)
-            value = row[4-1]
+            value = row[6-1]
         outputs["Cl"] = value
         
         outputs["Cd/Cl"] = outputs["Cd"] / outputs["Cl"]
+        #if(float(outputs["Cd/Cl"]) < 0):
+        #    outputs["Cd/Cl"] = 100
         #outputs["Tot_Obj"] = .5*outputs["Cd/Cl"] + .5*outputs["max_RCS"]
 
         with open(r'x(hist).csv', 'a', newline='') as csvfile:
             fieldnames = ['1','2','3','4','5','6','7','8','9','10','11','12']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames,delimiter=',')
-            writer.writerow({'1':float(ThickChord), '2':float(Camber), '3':float(CamberLoc), '4':float(TotalChord), '5':float(TotalSpan), '6':float(Twist), '7':float(XLoc), '8':"float(outputs["SM"]"), '9':float(outputs["Cl"]), '10':float(outputs["Cd/Cl"]), '11':"float(outputs["max_RCS"])", '12':"float(outputs["Tot_Obj"])"})
+            writer.writerow({'1':float(ThickChord), '2':float(Camber), '3':float(CamberLoc), '4':float(TotalChord), '5':float(TotalSpan), '6':float(Twist), '7':XLoc, '8':"float(outputs[\"SM\"])", '9':float(outputs["Cl"]), '10':float(outputs["Cd/Cl"]), '11':"float(outputs[\"max_RCS\"])", '12':"float(outputs[\"Tot_Obj\"])"})
         #os.system('start cmd /c C:\\Users\\wyatt\\OneDrive\\Documents\\GitHub\\AERE463-Project-Optimization\\openFile.bat')
         #time.sleep(1)
 
@@ -98,29 +100,45 @@ if __name__ == "__main__":
 
     prob = om.Problem(model)
     
-    prob.driver = om.SimpleGADriver()
-    prob.driver.options["max_gen"] = generations
+    prob.driver = om.ScipyOptimizeDriver()
+    prob.driver.options["optimizer"] = "COBYLA" #COBYLA or SLSQP
+    #prob.driver.options['maxiter'] = 200
+    #prob.driver = om.DOEDriver(om.LatinHypercubeGenerator())
+    #prob.driver = om.SimpleGADriver()
+    #prob.driver.options["max_gen"] = generations
+    #prob.driver.options["Pc"] = .8
+    #prob.driver.options["Pm"] = .5
     
-    prob.model.add_design_var("uav.ThickChord", lower=.1, upper=1)
-    prob.model.add_design_var("uav.Camber", lower=0, upper=0.9)
-    prob.model.add_design_var("uav.CamberLoc", lower=0.1, upper=0.9)
-    prob.model.add_design_var("uav.TotalChord", lower=1, upper=2)
-    prob.model.add_design_var("uav.TotalSpan", lower=1, upper=15)
-    prob.model.add_design_var("uav.Twist", lower=0, upper=5)
+    prob.model.add_design_var("uav.ThickChord", lower=0.05, upper=0.2)
+    prob.model.add_design_var("uav.Camber", lower=0.01, upper=0.09)
+    prob.model.add_design_var("uav.CamberLoc", lower=0.1, upper=0.5)
+    prob.model.add_design_var("uav.TotalChord", lower=1.0, upper=3.0)
+    prob.model.add_design_var("uav.TotalSpan", lower=5.0, upper=15.0)
+    prob.model.add_design_var("uav.Twist", lower=0.0, upper=5.0)
     #prob.model.add_design_var("uav.XLoc", lower=0, upper=5)
-    prob.model.add_constraint("uav.Cl", lower=0.3, upper=0.35)
+    prob.model.add_constraint("uav.Cl", lower=0.05, upper=0.1)
     #prob.model.add_constraint("uav.SM", lower=5, upper=25)
-    prob.model.add_objective("uav.Cd/Cl", scaler=-100.0)
+    prob.model.add_objective("uav.Cd/Cl")
     
     prob.setup()
     
-    prob.set_val("uav.ThickChord", 0.1)
-    prob.set_val("uav.Camber", 0.0)
-    prob.set_val("uav.CamberLoc", 0.2)
-    prob.set_val("uav.TotalChord", 1.9)
-    prob.set_val("uav.TotalSpan", 13.5)
-    prob.set_val("uav.Twist", 0)
+    prob.set_val("uav.ThickChord", 0.10166256) #0.1
+    prob.set_val("uav.Camber", 0.11301766) #0.0
+    prob.set_val("uav.CamberLoc", 0.89320971) #0.2
+    prob.set_val("uav.TotalChord", 1.9) #1.9
+    prob.set_val("uav.TotalSpan", 11.28342345) #13.5
+    prob.set_val("uav.Twist", 1.34121068) #0.0
     #prob.set_val("uav.XLoc", 2.5)
     
     prob.run_driver()
+
+    print("ThickChord ", prob.get_val("uav.ThickChord"))
+    print("Camber     ", prob.get_val("uav.Camber"))
+    print("CamberLoc  ", prob.get_val("uav.CamberLoc"))
+    print("Chord      ", prob.get_val("uav.TotalChord"))
+    print("Span       ", prob.get_val("uav.TotalSpan"))
+    print("Twist      ", prob.get_val("uav.Twist"))
+    #print("XLoc       ", prob.get_val("uav.XLoc"))
+    print("Cl         ", prob.get_val("uav.Cl"))
+    print("Cd/Cl      ", prob.get_val("uav.Cd/Cl"))
     
