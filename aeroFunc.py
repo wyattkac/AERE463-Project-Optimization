@@ -29,6 +29,9 @@ def AeroAnal(ThickChord, Camber, CamberLoc, TotalChord, TotalSpan, Twist, XLoc, 
     vsp.SetParmVal(wing_id, "ThickChord", "XSecCurve_0", ThickChord[0]) #Range of 0 to 1
     vsp.SetParmVal(wing_id, "Camber", "XSecCurve_0", Camber[0]) #Range of 0 to 0.09
     vsp.SetParmVal(wing_id, "CamberLoc", "XSecCurve_0", CamberLoc[0]) #Range of 0.1 to 0.9
+    vsp.SetParmVal(wing_id, "ThickChord", "XSecCurve_1", ThickChord[0]) #Range of 0 to 1
+    vsp.SetParmVal(wing_id, "Camber", "XSecCurve_1", Camber[0]) #Range of 0 to 0.09
+    vsp.SetParmVal(wing_id, "CamberLoc", "XSecCurve_1", CamberLoc[0]) #Range of 0.1 to 0.9
     #   Param for Wing
     vsp.SetParmVal(wing_id, "TotalChord", "WingGeom", TotalChord[0])
     #TODO
@@ -97,6 +100,11 @@ def AeroAnal(ThickChord, Camber, CamberLoc, TotalChord, TotalSpan, Twist, XLoc, 
     mach = []
     mach.append(0.7)
     vsp.SetDoubleAnalysisInput(analysis_name, "MachStart", mach, 0)
+    re = []
+    V = mach[0]*343
+    L = TotalChord[0]*3.281
+    re.append(V*L/(1.470*10**-5))
+    vsp.SetDoubleAnalysisInput(analysis_name, "ReCref", re)
     vsp.Update()
     #// list inputs, type, and current values
     vsp.PrintAnalysisInputs(analysis_name)

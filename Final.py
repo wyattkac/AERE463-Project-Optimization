@@ -110,15 +110,15 @@ if __name__ == "__main__":
     
     prob.driver = om.SimpleGADriver()
     prob.driver.options["max_gen"] = generations
-    
-    prob.model.add_design_var("uav.ThickChord", lower=.1, upper=1)
-    prob.model.add_design_var("uav.Camber", lower=0, upper=0.9)
-    prob.model.add_design_var("uav.CamberLoc", lower=0.1, upper=0.9)
-    prob.model.add_design_var("uav.TotalChord", lower=1, upper=2)
-    prob.model.add_design_var("uav.TotalSpan", lower=1, upper=15)
-    prob.model.add_design_var("uav.Twist", lower=0, upper=5)
+
+    prob.model.add_design_var("uav.ThickChord", lower=0.05, upper=0.2)
+    prob.model.add_design_var("uav.Camber", lower=0.01, upper=0.09)
+    prob.model.add_design_var("uav.CamberLoc", lower=0.1, upper=0.5)
+    prob.model.add_design_var("uav.TotalChord", lower=1.0, upper=3.0)
+    prob.model.add_design_var("uav.TotalSpan", lower=5.0, upper=15.0)
+    prob.model.add_design_var("uav.Twist", lower=0.0, upper=5.0)
     prob.model.add_design_var("uav.XLoc", lower=0, upper=5)
-    prob.model.add_constraint("uav.Cl", lower=0.3, upper=0.35)
+    prob.model.add_constraint("uav.Cl", lower=0.05, upper=0.1)
     prob.model.add_constraint("uav.SM", lower=5, upper=25)
     prob.model.add_objective("uav.Tot_Obj", scaler=-100.0)
     
@@ -134,8 +134,13 @@ if __name__ == "__main__":
     
     prob.run_driver()
     
-    # f = prob.get_val("uav.Cd/Cl")
-    # Cl = prob.get_val("uav.RCS")
-    # print(Cl)
-    # print(f)
+    print("ThickChord ", prob.get_val("uav.ThickChord"))
+    print("Camber     ", prob.get_val("uav.Camber"))
+    print("CamberLoc  ", prob.get_val("uav.CamberLoc"))
+    print("Chord      ", prob.get_val("uav.TotalChord"))
+    print("Span       ", prob.get_val("uav.TotalSpan"))
+    print("Twist      ", prob.get_val("uav.Twist"))
+    print("XLoc       ", prob.get_val("uav.XLoc"))
+    print("Cl         ", prob.get_val("uav.Cl"))
+    print("Cd/Cl      ", prob.get_val("uav.Cd/Cl"))
     
