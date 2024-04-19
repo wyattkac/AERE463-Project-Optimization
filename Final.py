@@ -7,6 +7,7 @@ import time
 import shutil
 from rcsFunc import rcs
 from aeroFunc import AeroAnal, StabAnal
+import math
 
 __authors__ = "Wyatt, Nicholas"
 __copyright__ = "Copyright 2024, Wyatt and Nicholas"
@@ -16,7 +17,9 @@ __status__ = "Prototype"
 #TODO Add more inputs
 #TODO Clean Up Code (remove unneeded imports, tidy code & comments) 
 
-generations = 50
+generations = 10
+cl_max = .1
+cl_min = .05
 class AeroRCS_opt(om.ExplicitComponent):
 
     def setup(self):
@@ -58,7 +61,7 @@ class AeroRCS_opt(om.ExplicitComponent):
 
         with open("z.csv") as f:
             reader = csv.reader(f)
-            for i in range(17):
+            for i in range(18): #Use Cdtott instead because Cdtot was creating negative numbers (Cdi was negative)
                 row = next(reader)
             value = row[6-1]
         outputs["Cd"] = value
@@ -71,6 +74,11 @@ class AeroRCS_opt(om.ExplicitComponent):
         outputs["Cl"] = value
         
         outputs["Cd/Cl"] = outputs["Cd"] / outputs["Cl"]
+        if(float(outputs["Cl"])>cl_max):
+            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + 1000000*(float(outputs["Cl"])-cl_max)
+        elif(float(outputs["Cl"])<cl_min):
+            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + 1000000*(cl_min-float(outputs["Cl"]))
+
         #if(float(outputs["Cd/Cl"]) < 0):
         #    outputs["Cd/Cl"] = 100
         #outputs["Tot_Obj"] = .5*outputs["Cd/Cl"] + .5*outputs["max_RCS"]
@@ -104,10 +112,10 @@ if __name__ == "__main__":
     prob.driver.options["optimizer"] = "COBYLA" #COBYLA or SLSQP
     #prob.driver.options['maxiter'] = 200
     #prob.driver = om.DOEDriver(om.LatinHypercubeGenerator())
-    #prob.driver = om.SimpleGADriver()
+    #prob.driver = om.DifferentialEvolutionDriver()
     #prob.driver.options["max_gen"] = generations
-    #prob.driver.options["Pc"] = .8
-    #prob.driver.options["Pm"] = .5
+    #prob.driver.options['Pc'] = 0.5
+    #prob.driver.options['F'] = 0.5
     
     prob.model.add_design_var("uav.ThickChord", lower=0.05, upper=0.2)
     prob.model.add_design_var("uav.Camber", lower=0.01, upper=0.09)
@@ -116,18 +124,18 @@ if __name__ == "__main__":
     prob.model.add_design_var("uav.TotalSpan", lower=5.0, upper=15.0)
     prob.model.add_design_var("uav.Twist", lower=0.0, upper=5.0)
     #prob.model.add_design_var("uav.XLoc", lower=0, upper=5)
-    prob.model.add_constraint("uav.Cl", lower=0.05, upper=0.1)
+    prob.model.add_constraint("uav.Cl", lower=cl_min, upper=cl_max) #Manually added with penalty method
     #prob.model.add_constraint("uav.SM", lower=5, upper=25)
     prob.model.add_objective("uav.Cd/Cl")
     
     prob.setup()
     
-    prob.set_val("uav.ThickChord", 0.10166256) #0.1
-    prob.set_val("uav.Camber", 0.11301766) #0.0
-    prob.set_val("uav.CamberLoc", 0.89320971) #0.2
-    prob.set_val("uav.TotalChord", 1.9) #1.9
-    prob.set_val("uav.TotalSpan", 11.28342345) #13.5
-    prob.set_val("uav.Twist", 1.34121068) #0.0
+    prob.set_val("uav.ThickChord", 0.05) #0.1
+    prob.set_val("uav.Camber", 0.09) #0.0
+    prob.set_val("uav.CamberLoc", 0.5) #0.2
+    prob.set_val("uav.TotalChord", 1.1) #1.9
+    prob.set_val("uav.TotalSpan", 13.99) #13.5
+    prob.set_val("uav.Twist", 0.35) #0.0
     #prob.set_val("uav.XLoc", 2.5)
     
     prob.run_driver()
