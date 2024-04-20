@@ -38,7 +38,7 @@ class AeroRCS_opt(om.ExplicitComponent):
         self.add_output("Cd/Cl", val=0.0)
         self.add_output("SM", val=0.0)
         #self.add_output("max_RCS", val=0.0)
-        #self.add_output("Tot_Obj", val=0.0)
+        self.add_output("Tot_Obj", val=0.0)
 
     #def setup_partials(self):
         # Finite difference all partials.
@@ -78,26 +78,22 @@ class AeroRCS_opt(om.ExplicitComponent):
         outputs["Cd/Cl"] = outputs["Cd"] / outputs["Cl"]
         #Penalty Method to constrain Cl
         if(float(outputs["Cl"])>cl_max):
-            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + 1000000*(float(outputs["Cl"])-cl_max)
+            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + (1000000*(float(outputs["Cl"])-cl_max))
         elif(float(outputs["Cl"])<cl_min):
-            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + 1000000*(cl_min-float(outputs["Cl"]))
+            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + (1000000*(cl_min-float(outputs["Cl"])))
         #Penalty Method to constrain SM
         if(outputs["SM"]>SM_max):
-            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + 10000*(float(outputs["SM"])-SM_max)
+            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + (10000*(float(outputs["SM"])-SM_max))
         elif(outputs["SM"]<SM_min):
-            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + 10000*(SM_min-float(outputs["SM"]))
+            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + (10000*(SM_min-float(outputs["SM"])))
 
-        #if(float(outputs["Cd/Cl"]) < 0):
-        #    outputs["Cd/Cl"] = 100
-        #outputs["Tot_Obj"] = .5*outputs["Cd/Cl"] + .5*outputs["max_RCS"]
+        outputs["Tot_Obj"] = outputs["Cd/Cl"] #+ .027*outputs["max_RCS"]/1
 
         with open(r'x(hist).csv', 'a', newline='') as csvfile:
             fieldnames = ['1','2','3','4','5','6','7','8','9','10','11','12']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames,delimiter=',')
-            writer.writerow({'1':float(ThickChord), '2':float(Camber), '3':float(CamberLoc), '4':float(TotalChord), '5':float(TotalSpan), '6':float(Twist), '7':float(XLoc), '8':float(outputs["SM"]), '9':float(outputs["Cl"]), '10':float(outputs["Cd/Cl"]), '11':"float(outputs[\"max_RCS\"])", '12':"float(outputs[\"Tot_Obj\"])"})
-        #os.system('start cmd /c C:\\Users\\wyatt\\OneDrive\\Documents\\GitHub\\AERE463-Project-Optimization\\openFile.bat')
-        #time.sleep(1)
-
+            writer.writerow({'1':float(ThickChord), '2':float(Camber), '3':float(CamberLoc), '4':float(TotalChord), '5':float(TotalSpan), '6':float(Twist), '7':float(XLoc), '8':float(outputs["SM"]), '9':float(outputs["Cl"]), '10':float(outputs["Cd/Cl"]), '11':"float(outputs[\"max_RCS\"])", '12':float(outputs["Tot_Obj"])})
+        #os.system('start cmd /c C:\\Users\\wyatt\\OneDrive\\Documents\\GitHub\\AERE463-Project-Optimization\\openFile.bat') #Show what's going on
 
 if __name__ == "__main__":
     if os.path.exists("x(hist).csv"):
@@ -119,6 +115,9 @@ if __name__ == "__main__":
     prob.driver = om.ScipyOptimizeDriver()
     prob.driver.options["optimizer"] = "COBYLA" #COBYLA or SLSQP
     #prob.driver.options['maxiter'] = 200
+    recorder = om.SqliteRecorder("cases.sql")
+    prob.add_recorder(recorder)
+    prob.driver.add_recorder(recorder)
     #prob.driver = om.DOEDriver(om.LatinHypercubeGenerator())
     #prob.driver = om.DifferentialEvolutionDriver()
     #prob.driver.options["max_gen"] = generations
@@ -134,17 +133,17 @@ if __name__ == "__main__":
     prob.model.add_design_var("uav.XLoc", lower=0, upper=5)
     prob.model.add_constraint("uav.Cl", lower=cl_min, upper=cl_max) #Manually added with penalty method
     prob.model.add_constraint("uav.SM", lower=SM_min, upper=SM_max)
-    prob.model.add_objective("uav.Cd/Cl")
+    prob.model.add_objective("uav.Tot_Obj")
     
     prob.setup()
     
-    prob.set_val("uav.ThickChord", 0.05) #0.1
-    prob.set_val("uav.Camber", 0.09) #0.0
-    prob.set_val("uav.CamberLoc", 0.5) #0.2
-    prob.set_val("uav.TotalChord", 1.1) #1.9
-    prob.set_val("uav.TotalSpan", 13.99) #13.5
-    prob.set_val("uav.Twist", 0.35) #0.0
-    prob.set_val("uav.XLoc", 2.5)
+    prob.set_val("uav.ThickChord", 0.05) #0.05
+    prob.set_val("uav.Camber", 0.015) #0.09
+    prob.set_val("uav.CamberLoc", 0.1) #0.5
+    prob.set_val("uav.TotalChord", 2.2) #1.1
+    prob.set_val("uav.TotalSpan", 14.98) #13.99
+    prob.set_val("uav.Twist", 2.62) #0.35
+    prob.set_val("uav.XLoc", 2.75) #2.5
     
     prob.run_driver()
 
@@ -157,4 +156,13 @@ if __name__ == "__main__":
     print("XLoc       ", prob.get_val("uav.XLoc"))
     print("Cl         ", prob.get_val("uav.Cl"))
     print("Cd/Cl      ", prob.get_val("uav.Cd/Cl"))
+    #print("max_RCS    ", prob.get_val("uav.max_RCS"))
+    print("Tot_Obj    ", prob.get_val("uav.Tot_Obj"))
+
+    cr = om.CaseReader("cases.sql")
+    driver_cases = cr.get_cases("driver", recurse=False)
+
+    for case in driver_cases:
+        print(case["parab_comp.f_xy"])
+    
     

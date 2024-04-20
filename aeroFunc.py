@@ -48,20 +48,20 @@ def AeroAnal(ThickChord, Camber, CamberLoc, TotalChord, TotalSpan, Twist, XLoc, 
     vsp.SetParmVal(wing_id, "SectTess_U", "XSec_1", 12) #Number of spanwise sections
     #vsp.SetParmVal(wing_id, "Density", "Mass_Props", 1)
     elev_id = vsp.AddGeom("WING", pod_id)
-    vsp.SetParmVal(elev_id, "X_Rel_Location", "XForm", 8)
+    vsp.SetParmVal(elev_id, "X_Rel_Location", "XForm", 8.2)
     #TODO
-    vsp.SetParmVal(elev_id, "TotalArea", "WingGeom", .4*TotalChord[0]*(TotalSpan[0]*TotalChord[0])/(8.2-2.5))
+    vsp.SetParmVal(elev_id, "TotalArea", "WingGeom", .4*TotalChord[0]*(TotalSpan[0]*TotalChord[0])/(8.4-(XLoc[0]+.25*TotalChord[0])))
     vsp.SetParmVal(elev_id, "SectTess_U", "XSec_1", 12)
     rudd_id = vsp.AddGeom("WING", pod_id)
     vsp.SetParmVal(rudd_id, "Sym_Planar_Flag", "Sym", 0.0 ) #Make it not symmetic (just half an airfoil)
     vsp.SetParmVal(rudd_id, "X_Rel_Rotation", "XForm", 90) #Rotate it vertically 
     vsp.SetParmVal(rudd_id, "X_Rel_Location", "XForm", 8.2)
     #TODO
-    vsp.SetParmVal(rudd_id, "TotalArea", "WingGeom", .03*TotalSpan[0]*(TotalSpan[0]*TotalChord[0])/(8.2-2.5))
+    vsp.SetParmVal(rudd_id, "TotalArea", "WingGeom", .03*TotalSpan[0]*(TotalSpan[0]*TotalChord[0])/(8.4-(XLoc[0]+.25*TotalChord[0])))
     vsp.SetParmVal(rudd_id, "SectTess_U", "XSec_1", 12)
     weight_id = vsp.AddGeom("BLANK", pod_id)
-    vsp.SetParmVal(weight_id, "X_Rel_Location", "XForm", 1)
-    vsp.SetParmVal(weight_id, "PointMass", "Mass_Props", .2)
+    vsp.SetParmVal(weight_id, "X_Rel_Location", "XForm", .2)
+    vsp.SetParmVal(weight_id, "PointMass", "Mass_Props", .3)
     vsp.Update()
     # Setup and Run Aerodynamic Analysis ---------------------------------------------------------------
     # Setup an Aero Analysis (Compute Geometry)
@@ -185,8 +185,10 @@ def StabAnal(ThickChord, Camber, CamberLoc, TotalChord, TotalSpan, Twist, XLoc, 
     Cmy2 = value
     xAc = (float(Cmy2)-float(Cmy1))/(float(Cl1)-float(Cl2)) #Aerodynamic Center
     with open("test_vehicle_MassProps.txt", "r") as f:
-        rows = f.readlines()[21:22]
+        rows = f.readlines()[1:30]
     rows = ''.join(rows)
-    xCg = float(rows.split()[2]) #Center of Gravity
+    rows = rows.split()
+    index = rows.index('Totals')
+    xCg = float(rows[index+2])
     SM = (xAc-xCg)/10 *100 #Static Margin
     return SM
