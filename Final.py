@@ -20,6 +20,8 @@ __status__ = "Prototype"
 generations = 10
 cl_max = .1
 cl_min = .05
+SM_max = 25.0
+SM_min = 5.0
 class AeroRCS_opt(om.ExplicitComponent):
 
     def setup(self):
@@ -34,13 +36,13 @@ class AeroRCS_opt(om.ExplicitComponent):
         self.add_output("Cl", val=0.0)
         self.add_output("Cd", val=0.0)
         self.add_output("Cd/Cl", val=0.0)
-        #self.add_output("SM", val=0.0)
+        self.add_output("SM", val=0.0)
         #self.add_output("max_RCS", val=0.0)
         #self.add_output("Tot_Obj", val=0.0)
 
-    def setup_partials(self):
+    #def setup_partials(self):
         # Finite difference all partials.
-        self.declare_partials("*", "*", method="fd")
+        #self.declare_partials("*", "*", method="fd")
 
     def compute(self, inputs, outputs):
         ThickChord = inputs["ThickChord"]
@@ -49,14 +51,14 @@ class AeroRCS_opt(om.ExplicitComponent):
         TotalChord = inputs["TotalChord"]
         TotalSpan = inputs["TotalSpan"]
         Twist = inputs["Twist"]
-        XLoc = [2.5]
+        XLoc = inputs["XLoc"]
         target = {
             "model": 'test_vehicle_mesh.stl',
             "location": (0, 0, 0),
         }
 
         AeroAnal(ThickChord, Camber, CamberLoc, TotalChord,  TotalSpan, Twist, XLoc, 4)
-        #outputs["SM"] = StabAnal(ThickChord, Camber, CamberLoc, TotalChord,  TotalSpan, Twist, XLoc, 0)
+        outputs["SM"] = StabAnal(ThickChord, Camber, CamberLoc, TotalChord,  TotalSpan, Twist, XLoc, 0)
         #[average_rcs, outputs["max_RCS"]] = rcs(target)
 
         with open("z.csv") as f:
@@ -74,10 +76,16 @@ class AeroRCS_opt(om.ExplicitComponent):
         outputs["Cl"] = value
         
         outputs["Cd/Cl"] = outputs["Cd"] / outputs["Cl"]
+        #Penalty Method to constrain Cl
         if(float(outputs["Cl"])>cl_max):
             outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + 1000000*(float(outputs["Cl"])-cl_max)
         elif(float(outputs["Cl"])<cl_min):
             outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + 1000000*(cl_min-float(outputs["Cl"]))
+        #Penalty Method to constrain SM
+        if(outputs["SM"]>SM_max):
+            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + 10000*(float(outputs["SM"])-SM_max)
+        elif(outputs["SM"]<SM_min):
+            outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + 10000*(SM_min-float(outputs["SM"]))
 
         #if(float(outputs["Cd/Cl"]) < 0):
         #    outputs["Cd/Cl"] = 100
@@ -86,7 +94,7 @@ class AeroRCS_opt(om.ExplicitComponent):
         with open(r'x(hist).csv', 'a', newline='') as csvfile:
             fieldnames = ['1','2','3','4','5','6','7','8','9','10','11','12']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames,delimiter=',')
-            writer.writerow({'1':float(ThickChord), '2':float(Camber), '3':float(CamberLoc), '4':float(TotalChord), '5':float(TotalSpan), '6':float(Twist), '7':XLoc, '8':"float(outputs[\"SM\"])", '9':float(outputs["Cl"]), '10':float(outputs["Cd/Cl"]), '11':"float(outputs[\"max_RCS\"])", '12':"float(outputs[\"Tot_Obj\"])"})
+            writer.writerow({'1':float(ThickChord), '2':float(Camber), '3':float(CamberLoc), '4':float(TotalChord), '5':float(TotalSpan), '6':float(Twist), '7':float(XLoc), '8':float(outputs["SM"]), '9':float(outputs["Cl"]), '10':float(outputs["Cd/Cl"]), '11':"float(outputs[\"max_RCS\"])", '12':"float(outputs[\"Tot_Obj\"])"})
         #os.system('start cmd /c C:\\Users\\wyatt\\OneDrive\\Documents\\GitHub\\AERE463-Project-Optimization\\openFile.bat')
         #time.sleep(1)
 
@@ -123,9 +131,9 @@ if __name__ == "__main__":
     prob.model.add_design_var("uav.TotalChord", lower=1.0, upper=3.0)
     prob.model.add_design_var("uav.TotalSpan", lower=5.0, upper=15.0)
     prob.model.add_design_var("uav.Twist", lower=0.0, upper=5.0)
-    #prob.model.add_design_var("uav.XLoc", lower=0, upper=5)
+    prob.model.add_design_var("uav.XLoc", lower=0, upper=5)
     prob.model.add_constraint("uav.Cl", lower=cl_min, upper=cl_max) #Manually added with penalty method
-    #prob.model.add_constraint("uav.SM", lower=5, upper=25)
+    prob.model.add_constraint("uav.SM", lower=SM_min, upper=SM_max)
     prob.model.add_objective("uav.Cd/Cl")
     
     prob.setup()
@@ -136,7 +144,7 @@ if __name__ == "__main__":
     prob.set_val("uav.TotalChord", 1.1) #1.9
     prob.set_val("uav.TotalSpan", 13.99) #13.5
     prob.set_val("uav.Twist", 0.35) #0.0
-    #prob.set_val("uav.XLoc", 2.5)
+    prob.set_val("uav.XLoc", 2.5)
     
     prob.run_driver()
 
@@ -146,7 +154,7 @@ if __name__ == "__main__":
     print("Chord      ", prob.get_val("uav.TotalChord"))
     print("Span       ", prob.get_val("uav.TotalSpan"))
     print("Twist      ", prob.get_val("uav.Twist"))
-    #print("XLoc       ", prob.get_val("uav.XLoc"))
+    print("XLoc       ", prob.get_val("uav.XLoc"))
     print("Cl         ", prob.get_val("uav.Cl"))
     print("Cd/Cl      ", prob.get_val("uav.Cd/Cl"))
     

@@ -59,6 +59,9 @@ def AeroAnal(ThickChord, Camber, CamberLoc, TotalChord, TotalSpan, Twist, XLoc, 
     #TODO
     vsp.SetParmVal(rudd_id, "TotalArea", "WingGeom", .03*TotalSpan[0]*(TotalSpan[0]*TotalChord[0])/(8.2-2.5))
     vsp.SetParmVal(rudd_id, "SectTess_U", "XSec_1", 12)
+    weight_id = vsp.AddGeom("BLANK", pod_id)
+    vsp.SetParmVal(weight_id, "X_Rel_Location", "XForm", 1)
+    vsp.SetParmVal(weight_id, "PointMass", "Mass_Props", .2)
     vsp.Update()
     # Setup and Run Aerodynamic Analysis ---------------------------------------------------------------
     # Setup an Aero Analysis (Compute Geometry)
@@ -182,7 +185,7 @@ def StabAnal(ThickChord, Camber, CamberLoc, TotalChord, TotalSpan, Twist, XLoc, 
     Cmy2 = value
     xAc = (float(Cmy2)-float(Cmy1))/(float(Cl1)-float(Cl2)) #Aerodynamic Center
     with open("test_vehicle_MassProps.txt", "r") as f:
-        rows = f.readlines()[20:21]
+        rows = f.readlines()[21:22]
     rows = ''.join(rows)
     xCg = float(rows.split()[2]) #Center of Gravity
     SM = (xAc-xCg)/10 *100 #Static Margin
