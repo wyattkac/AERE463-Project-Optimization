@@ -37,7 +37,7 @@ class AeroRCS_opt(om.ExplicitComponent):
         self.add_output("Cd", val=0.0)
         self.add_output("Cd/Cl", val=0.0)
         self.add_output("SM", val=0.0)
-        #self.add_output("max_RCS", val=0.0)
+        self.add_output("max_RCS", val=0.0)
         self.add_output("Tot_Obj", val=0.0)
 
     #def setup_partials(self):
@@ -59,7 +59,7 @@ class AeroRCS_opt(om.ExplicitComponent):
 
         AeroAnal(ThickChord, Camber, CamberLoc, TotalChord,  TotalSpan, Twist, XLoc, 4)
         outputs["SM"] = StabAnal(ThickChord, Camber, CamberLoc, TotalChord,  TotalSpan, Twist, XLoc, 0)
-        #[average_rcs, outputs["max_RCS"]] = rcs(target)
+        [average_rcs, outputs["max_RCS"]] = rcs(target)
 
         with open("z.csv") as f:
             reader = csv.reader(f)
@@ -86,13 +86,14 @@ class AeroRCS_opt(om.ExplicitComponent):
             outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + (10000*(float(outputs["SM"])-SM_max))
         elif(outputs["SM"]<SM_min):
             outputs["Cd/Cl"] = float(outputs["Cd/Cl"]) + (10000*(SM_min-float(outputs["SM"])))
-
-        outputs["Tot_Obj"] = outputs["Cd/Cl"] #+ .027*outputs["max_RCS"]/1
+        
+#MUST Manually Adjust The Next Line
+        outputs["Tot_Obj"] = outputs["Cd/Cl"] + .0264*outputs["max_RCS"]/300
 
         with open(r'x(hist).csv', 'a', newline='') as csvfile:
             fieldnames = ['1','2','3','4','5','6','7','8','9','10','11','12']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames,delimiter=',')
-            writer.writerow({'1':float(ThickChord), '2':float(Camber), '3':float(CamberLoc), '4':float(TotalChord), '5':float(TotalSpan), '6':float(Twist), '7':float(XLoc), '8':float(outputs["SM"]), '9':float(outputs["Cl"]), '10':float(outputs["Cd/Cl"]), '11':"float(outputs[\"max_RCS\"])", '12':float(outputs["Tot_Obj"])})
+            writer.writerow({'1':float(ThickChord), '2':float(Camber), '3':float(CamberLoc), '4':float(TotalChord), '5':float(TotalSpan), '6':float(Twist), '7':float(XLoc), '8':float(outputs["SM"]), '9':float(outputs["Cl"]), '10':float(outputs["Cd/Cl"]), '11':float(outputs["max_RCS"]), '12':float(outputs["Tot_Obj"])})
         #os.system('start cmd /c C:\\Users\\wyatt\\OneDrive\\Documents\\GitHub\\AERE463-Project-Optimization\\openFile.bat') #Show what's going on
 
 if __name__ == "__main__":
@@ -156,13 +157,13 @@ if __name__ == "__main__":
     print("XLoc       ", prob.get_val("uav.XLoc"))
     print("Cl         ", prob.get_val("uav.Cl"))
     print("Cd/Cl      ", prob.get_val("uav.Cd/Cl"))
-    #print("max_RCS    ", prob.get_val("uav.max_RCS"))
+    print("max_RCS    ", prob.get_val("uav.max_RCS"))
     print("Tot_Obj    ", prob.get_val("uav.Tot_Obj"))
 
     cr = om.CaseReader("cases.sql")
     driver_cases = cr.get_cases("driver", recurse=False)
 
     for case in driver_cases:
-        print(case["parab_comp.f_xy"])
+        print(case["uav.Tot_Obj"])
     
     
