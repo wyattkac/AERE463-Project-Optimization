@@ -116,14 +116,12 @@ if __name__ == "__main__":
     prob.driver = om.ScipyOptimizeDriver()
     prob.driver.options["optimizer"] = "COBYLA" #COBYLA or SLSQP
     #prob.driver.options['maxiter'] = 200
+    #prob.driver = om.DifferentialEvolutionDriver()
+    #prob.driver.options["max_gen"] = generations
     recorder = om.SqliteRecorder("cases.sql")
     prob.add_recorder(recorder)
     prob.driver.add_recorder(recorder)
     #prob.driver = om.DOEDriver(om.LatinHypercubeGenerator())
-    #prob.driver = om.DifferentialEvolutionDriver()
-    #prob.driver.options["max_gen"] = generations
-    #prob.driver.options['Pc'] = 0.5
-    #prob.driver.options['F'] = 0.5
     
     prob.model.add_design_var("uav.ThickChord", lower=0.05, upper=0.2)
     prob.model.add_design_var("uav.Camber", lower=0.01, upper=0.09)
@@ -138,13 +136,13 @@ if __name__ == "__main__":
     
     prob.setup()
     
-    prob.set_val("uav.ThickChord", 0.05) #0.05
-    prob.set_val("uav.Camber", 0.015) #0.09
+    prob.set_val("uav.ThickChord", 0.1) #0.05
+    prob.set_val("uav.Camber", 0.02) #0.09
     prob.set_val("uav.CamberLoc", 0.1) #0.5
-    prob.set_val("uav.TotalChord", 2.2) #1.1
-    prob.set_val("uav.TotalSpan", 14.98) #13.99
-    prob.set_val("uav.Twist", 2.62) #0.35
-    prob.set_val("uav.XLoc", 2.75) #2.5
+    prob.set_val("uav.TotalChord", 2.1) #1.1
+    prob.set_val("uav.TotalSpan", 14.9) #13.99
+    prob.set_val("uav.Twist", .1) #0.35
+    prob.set_val("uav.XLoc", 3.7) #2.5
     
     prob.run_driver()
 
