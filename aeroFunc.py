@@ -192,3 +192,6 @@ def StabAnal(ThickChord, Camber, CamberLoc, TotalChord, TotalSpan, Twist, XLoc, 
     xCg = float(rows[index+2])
     SM = (xAc-xCg)/10 *100 #Static Margin
     return SM
+
+#AeroAnal([0.1],	[0.02],	[0.1],	[2.1],	[14.9],	[0.1],	[3.7], 0)
+#AeroAnal([0.12166664418279023],	[0.037887784],	[0.2438669913858251],	[2.1903635130248866],	[14.915499211817515],	[0.15590454130713147],	[3.5605071267100175], 0)
